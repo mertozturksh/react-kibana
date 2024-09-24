@@ -1,6 +1,8 @@
 import React, { useReducer } from 'react';
 import { filterReducer } from '../../reducers/filterReducer';
 
+import { OPERATORS, DUMMY_VALUES } from '../../constants';
+
 import { Button, Card, CardHeader, CardContent, CardActions, TextField, FormGroup, FormControlLabel, InputLabel, Select, MenuItem, Switch } from '@mui/material';
 
 const initialState = {
@@ -11,15 +13,7 @@ const initialState = {
   label: '',
 };
 
-const baseFilter = {
-  enabled: true,
-  field: null,
-  operator: null,
-  value: null,
-  label: null,
-};
-
-const EditFilterCard = ({ areaRef, addFilterButtonRef, setIsSelectOpen, onClose }) => {
+const EditFilterCard = ({ fields, areaRef, addFilterButtonRef, setIsSelectOpen, onClose, onSave }) => {
   const [state, dispatch] = useReducer(filterReducer, initialState);
 
 
@@ -50,7 +44,35 @@ const EditFilterCard = ({ areaRef, addFilterButtonRef, setIsSelectOpen, onClose 
     onClose();
   };
   const handleSave = () => {
-    // handle submit then close
+
+    if (!state.field || !state.operator || !state.value) {
+      alert('please select the filter options.');
+      return;
+    }
+
+    if (state.createCustomLabel) {
+      // label required.
+      if (state.label) {
+        onSave({
+          enabled: true,
+          field: state.field,
+          operator: state.operator,
+          value: state.value,
+          label: state.label,
+        });
+      }
+      alert('please type a custom name.');
+      return;
+    }
+    else {
+      onSave({
+        enabled: true,
+        field: state.field,
+        operator: state.operator,
+        value: state.value,
+        label: state.field + ' : ' + state.operator,
+      });
+    }
     onClose();
   };
 
@@ -79,13 +101,16 @@ const EditFilterCard = ({ areaRef, addFilterButtonRef, setIsSelectOpen, onClose 
               sx={{ height: 40, backgroundColor: '#fafafa' }}
             >
               <MenuItem disabled value="">Select a field</MenuItem>
-              <MenuItem value="clientip">clientip</MenuItem>
+              {fields.map((item) => (
+                <MenuItem key={item.id} value={item.name}>{item.name}</MenuItem>
+              ))}
             </Select>
           </div>
 
           <div className="w-1/4">
             <InputLabel>Operator</InputLabel>
             <Select
+              disabled={state.field ? false : true}
               displayEmpty
               value={state.operator || ''}
               onOpen={() => setIsSelectOpen(true)}
@@ -94,21 +119,49 @@ const EditFilterCard = ({ areaRef, addFilterButtonRef, setIsSelectOpen, onClose 
               sx={{ height: 40, backgroundColor: '#fafafa', width: '100%', minWidth: '120px' }}
             >
               <MenuItem disabled value="">Select an operator</MenuItem>
-              <MenuItem value="is">is</MenuItem>
-              <MenuItem value="is not">is not</MenuItem>
+              {OPERATORS.map((item) => (
+                <MenuItem key={item.value} value={item.value}>{item.name}</MenuItem>
+              ))}
             </Select>
           </div>
 
         </div>
 
-        <InputLabel>Value</InputLabel>
-        <TextField
-          fullWidth
-          value={state.value || ''}
-          variant="outlined"
-          onChange={handleValueChange}
-          sx={{ '& .MuiOutlinedInput-root': { height: '40px', }, backgroundColor: '#fafafa' }}
-        />
+        {state.field && state.operator && (
+          <>
+            <InputLabel>Value</InputLabel>
+
+            {(state.operator === 'is' || state.operator === 'is_not' || state.operator === 'one_of' || state.operator === 'not_one_of') && (
+              <Select
+                disabled={state.field && state.operator ? false : true}
+                displayEmpty
+                value={state.value || ''}
+                onOpen={() => setIsSelectOpen(true)}
+                onClose={() => setIsSelectOpen(false)}
+                onChange={handleValueChange}
+                sx={{ height: 40, backgroundColor: '#fafafa', width: '100%', minWidth: '120px' }}
+              >
+                <MenuItem disabled value="">Select an value</MenuItem>
+                {DUMMY_VALUES.map((item) => (
+                  <MenuItem key={item} value={item}>{item}</MenuItem>
+                ))}
+              </Select>
+            )}
+
+            {(state.operator === 'exists' || state.operator === 'not_exists') && (
+              <TextField
+                fullWidth
+                value={state.value || ''}
+                variant="outlined"
+                onChange={handleValueChange}
+                sx={{ '& .MuiOutlinedInput-root': { height: '40px', }, backgroundColor: '#fafafa' }}
+              />
+            )}
+
+          </>
+        )}
+
+
 
         <FormGroup className='mt-2 mx-2'>
           <FormControlLabel sx={{ width: 250 }} control={<Switch onChange={handleToggleCreateCustomLabel} />} label="Create custom label?" />
@@ -125,7 +178,7 @@ const EditFilterCard = ({ areaRef, addFilterButtonRef, setIsSelectOpen, onClose 
         </Button>
       </CardActions>
     </Card>
-  )
-}
+  );
+};
 
-export default EditFilterCard
+export default EditFilterCard;

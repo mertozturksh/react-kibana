@@ -29,7 +29,7 @@ const ChangeFiltersCard = ({ areaRef, changeFiltersButtonRef, onClickEnableAll, 
         item.type === 'divider' ? (
           <Divider key={index} />
         ) : (
-          <ListItem button key={index} onClick={item.action} >
+          <ListItem button="true" key={index} onClick={item.action} >
             <ListItemIcon>
               {<item.icon />}
             </ListItemIcon>
@@ -37,7 +37,6 @@ const ChangeFiltersCard = ({ areaRef, changeFiltersButtonRef, onClickEnableAll, 
           </ListItem>
         )
       ))}
-
     </Card>
   )
 }

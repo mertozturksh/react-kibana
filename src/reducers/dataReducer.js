@@ -4,14 +4,23 @@ export const dataReducer = (state, action) => {
     case 'SET_INITIALIZED':
       return { ...state, initialized: true };
 
+    //#region data
     case 'FETCH_DATA_START':
       return { ...state, loading: true, error: null };
-    case 'FETCH_DATA_SUCCESS':
-      return { ...state, loading: false, data: action.data };
+    case 'FETCH_DATA_SUCCESS': {
+      if (action.data.length > 0) {
+        const fields = Object.keys(action.data[0]).map((field, index) => ({
+          id: index, name: field, filterable: true
+        }));
+        return { ...state, loading: false, data: action.data, fields: fields };
+      }
+      return { ...state, loading: false, data: [], fields: [] };
+    }
     case 'FETCH_DATA_FAILURE':
       return { ...state, loading: false, error: action.error };
+    //#endregion
 
-
+    //#region appliedFilters
     case 'ADD_APPLIEDFILTER':
       return {
         ...state,
@@ -52,16 +61,27 @@ export const dataReducer = (state, action) => {
       }));
       return { ...state, appliedFilters: disabledFilters };
     }
+    //#endregion
+
+    //#region searchText and date
+    case 'SET_SEARCHTEXT':
+      return { ...state, searchText: action.searchText };
+
+    case 'SET_DATE':
+      return { ...state, date: action.date };
+    //#endregion
 
 
 
-
+    
+    //#region savedFilters
     case 'FETCH_SAVEDFILTERS_START':
       return { ...state, loading: true, error: null };
     case 'FETCH_SAVEDFILTERS_SUCCESS':
       return { ...state, loading: false, savedFilters: action.data };
     case 'FETCH_SAVEDFILTERS_FAILURE':
       return { ...state, loading: false, error: action.error };
+    //#endregion
 
     default:
       return state;

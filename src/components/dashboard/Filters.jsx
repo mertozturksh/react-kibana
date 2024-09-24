@@ -1,11 +1,12 @@
 import React, { useRef, useState } from 'react';
 import { useClickAway } from "@uidotdev/usehooks";
-import { IconButton, Button, Chip } from '@mui/material';
+import { IconButton, Button } from '@mui/material';
 import { MdOutlineFilterList, MdAdd } from "react-icons/md";
 import EditFilterCard from './EditFilterCard';
 import ChangeFiltersCard from './ChangeFiltersCard';
+import FilterChip from './FilterChip';
 
-const Filters = ({ appliedFilters, onAddFilter, onUpdateFilter, onRemoveFilter, onRemoveAllFilters, onEnableAllFilters, onDisableAllFilters }) => {
+const Filters = ({ fields, appliedFilters, onAddFilter, onUpdateFilter, onRemoveFilter, onRemoveAllFilters, onEnableAllFilters, onDisableAllFilters }) => {
   const [isSelectOpen, setIsSelectOpen] = useState(false);
 
   const [showEditFilterCard, setShowEditFilterCard] = useState(false);
@@ -47,10 +48,10 @@ const Filters = ({ appliedFilters, onAddFilter, onUpdateFilter, onRemoveFilter, 
       <div className='flex items-center space-x-2'>
         {
           appliedFilters.map((item, index) => (
-            <Chip
+            <FilterChip
               key={index}
-              label={"Clickable Deletable " + item}
-              variant="outlined"
+              keyName={index}
+              filter={item}
               onClick={() => { }}
               onDelete={() => onRemoveFilter(item)}
             />
@@ -64,16 +65,19 @@ const Filters = ({ appliedFilters, onAddFilter, onUpdateFilter, onRemoveFilter, 
           changeFiltersButtonRef={changeFiltersButtonRef}
           onClickEnableAll={onEnableAllFilters}
           onClickDisableAll={onDisableAllFilters}
-          onClickRemoveAll={onRemoveAllFilters} />
+          onClickRemoveAll={onRemoveAllFilters}
+        />
       )}
 
       {showEditFilterCard && (
         <EditFilterCard
+          fields={fields.filter(item => item.filterable)}
           areaRef={addFilterAreaRef}
           addFilterButtonRef={addFilterButtonRef}
           setIsSelectOpen={setIsSelectOpen}
           onClose={() => setShowEditFilterCard(false)}
-          onSave={() => { }} />
+          onSave={onAddFilter}
+        />
       )}
     </>
   );

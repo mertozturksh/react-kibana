@@ -1,17 +1,21 @@
 import React, { useEffect, useReducer } from 'react';
-import { fetchAnimeList, fetchSavedFilterList } from '../../api/index';
 import { dataReducer } from '../../reducers/dataReducer';
+import { fetchAnimeList, fetchSavedFilterList } from '../../api/index';
+import { flattenObjectOrArray } from '../../utils/index';
 
 import SaveAndSearch from '../../components/dashboard/SaveAndSearch';
 import DatePicker from '../../components/dashboard/DatePicker';
 import Filters from '../../components/dashboard/Filters';
 import RefreshButton from '../../components/dashboard/RefreshButton';
-
+import Table from '../../components/dashboard/Table';
 
 const initialState = {
   data: null,
+  fields: null,
   savedFilters: null,
-  appliedFilters: [1, 2, 3],
+  appliedFilters: [],
+  searchText: null,
+  date: null,
 
   loading: false,
   error: null,
@@ -34,7 +38,8 @@ const Dashboard = () => {
     dispatch({ type: 'FETCH_DATA_START' });
     try {
       const response = await fetchAnimeList();
-      dispatch({ type: 'FETCH_DATA_SUCCESS', data: response.data });
+      const flattenedData = flattenObjectOrArray(response.data);
+      dispatch({ type: 'FETCH_DATA_SUCCESS', data: flattenedData });
     } catch (error) {
       dispatch({ type: 'FETCH_DATA_FAILURE', error: error.message });
     }
@@ -76,7 +81,7 @@ const Dashboard = () => {
 
   };
   const handleRefresh = () => {
-
+    fetchData();
   };
   const handleSaveFilter = () => {
 
@@ -85,21 +90,30 @@ const Dashboard = () => {
 
   if (!state.initialized) {
     return <p>Loading...</p>
-  };
+  }
+
   return (
     <>
       <div className="flex items-center space-x-2 px-2 my-2 mt-4">
 
-        <SaveAndSearch onSave={handleSaveFilter} onChange={handleSearchChange} />
+        <SaveAndSearch
+          onSave={handleSaveFilter}
+          onChange={handleSearchChange}
+        />
 
-        <DatePicker onChange={handleDateChange} />
+        <DatePicker
+          onChange={handleDateChange}
+        />
 
-        <RefreshButton onClick={handleRefresh} />
+        <RefreshButton
+          onClick={handleRefresh}
+        />
 
       </div>
 
       <div className='flex items-center space-x-3 px-2'>
         <Filters
+          fields={state.fields}
           appliedFilters={state.appliedFilters}
           onAddFilter={handleAddFilter}
           onRemoveFilter={handleRemoveFilter}
@@ -107,6 +121,13 @@ const Dashboard = () => {
           onRemoveAllFilters={handleRemoveAllFilters}
           onEnableAllFilters={handleEnableAllFilters}
           onDisableAllFilters={handleDisableAllFilters}
+        />
+      </div>
+
+      <div className='flex items-center mt-12 px-4 w-full'>
+        <Table
+          data={state.data}
+          filters={state.appliedFilters}
         />
       </div>
     </>

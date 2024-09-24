@@ -6,7 +6,7 @@ import EditFilterCard from './EditFilterCard';
 import ChangeFiltersCard from './ChangeFiltersCard';
 import FilterChip from './FilterChip';
 
-const Filters = ({ fields, appliedFilters, onAddFilter, onUpdateFilter, onRemoveFilter, onRemoveAllFilters, onEnableAllFilters, onDisableAllFilters }) => {
+const Filters = ({ fields, appliedFilters, onAddFilter, onUpdateFilter, onRemoveFilter, onRemoveAllFilters, onEnableAllFilters, onDisableAllFilters, retrieveFieldValues }) => {
   const [isSelectOpen, setIsSelectOpen] = useState(false);
 
   const [showEditFilterCard, setShowEditFilterCard] = useState(false);
@@ -77,6 +77,7 @@ const Filters = ({ fields, appliedFilters, onAddFilter, onUpdateFilter, onRemove
           setIsSelectOpen={setIsSelectOpen}
           onClose={() => setShowEditFilterCard(false)}
           onSave={onAddFilter}
+          retrieveFieldValues={retrieveFieldValues}
         />
       )}
     </>

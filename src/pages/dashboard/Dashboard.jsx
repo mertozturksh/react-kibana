@@ -87,6 +87,14 @@ const Dashboard = () => {
 
   };
 
+  const retrieveFieldValues = (field) => {
+    return [...new Set(
+      state.data
+        .map(item => item[field])
+        .filter(value => value !== null && value !== undefined)
+    )];
+  };
+
 
   if (!state.initialized) {
     return <p>Loading...</p>
@@ -121,6 +129,7 @@ const Dashboard = () => {
           onRemoveAllFilters={handleRemoveAllFilters}
           onEnableAllFilters={handleEnableAllFilters}
           onDisableAllFilters={handleDisableAllFilters}
+          retrieveFieldValues={retrieveFieldValues}
         />
       </div>
 

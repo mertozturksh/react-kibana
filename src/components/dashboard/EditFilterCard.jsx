@@ -1,7 +1,7 @@
 import React, { useReducer } from 'react';
 import { filterReducer } from '../../reducers/filterReducer';
 
-import { OPERATORS, DUMMY_VALUES } from '../../constants';
+import { OPERATORS } from '../../constants';
 
 import { Button, Card, CardHeader, CardContent, CardActions, TextField, FormGroup, FormControlLabel, InputLabel, Select, MenuItem, Switch } from '@mui/material';
 
@@ -13,15 +13,23 @@ const initialState = {
   label: '',
 };
 
-const EditFilterCard = ({ fields, areaRef, addFilterButtonRef, setIsSelectOpen, onClose, onSave }) => {
+const EditFilterCard = ({ fields, areaRef, addFilterButtonRef, setIsSelectOpen, onClose, onSave, retrieveFieldValues }) => {
   const [state, dispatch] = useReducer(filterReducer, initialState);
 
 
   const handleFieldChange = (event) => {
+    handleClear();
     dispatch({ type: 'SET_FIELD', field: event.target.value });
   };
   const handleOperatorChange = (event) => {
-    dispatch({ type: 'SET_OPERATOR', operator: event.target.value });
+    const selectedOperator = event.target.value;
+    if (selectedOperator === 'one_of' || selectedOperator === 'not_one_of') {
+      dispatch({ type: 'SET_OPERATOR', operator: selectedOperator });
+      dispatch({ type: 'SET_VALUE', value: [] });
+    } else {
+      dispatch({ type: 'SET_OPERATOR', operator: selectedOperator });
+      dispatch({ type: 'SET_VALUE', value: null });
+    }
   };
   // add debounce
   const handleValueChange = (event) => {
@@ -131,18 +139,19 @@ const EditFilterCard = ({ fields, areaRef, addFilterButtonRef, setIsSelectOpen, 
           <>
             <InputLabel>Value</InputLabel>
 
-            {(state.operator === 'is' || state.operator === 'is_not' || state.operator === 'one_of' || state.operator === 'not_one_of') && (
+            {state.field && state.operator && (state.operator === 'is' || state.operator === 'is_not' || state.operator === 'one_of' || state.operator === 'not_one_of') && (
               <Select
                 disabled={state.field && state.operator ? false : true}
                 displayEmpty
-                value={state.value || ''}
+                multiple={state.operator === 'one_of' || state.operator === 'not_one_of'}
+                value={state.value || []}
                 onOpen={() => setIsSelectOpen(true)}
                 onClose={() => setIsSelectOpen(false)}
                 onChange={handleValueChange}
                 sx={{ height: 40, backgroundColor: '#fafafa', width: '100%', minWidth: '120px' }}
               >
                 <MenuItem disabled value="">Select an value</MenuItem>
-                {DUMMY_VALUES.map((item) => (
+                {(retrieveFieldValues(state.field)).map((item) => (
                   <MenuItem key={item} value={item}>{item}</MenuItem>
                 ))}
               </Select>
@@ -160,8 +169,6 @@ const EditFilterCard = ({ fields, areaRef, addFilterButtonRef, setIsSelectOpen, 
 
           </>
         )}
-
-
 
         <FormGroup className='mt-2 mx-2'>
           <FormControlLabel sx={{ width: 250 }} control={<Switch onChange={handleToggleCreateCustomLabel} />} label="Create custom label?" />

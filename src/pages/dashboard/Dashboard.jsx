@@ -11,7 +11,7 @@ import RefreshButton from '../../components/dashboard/RefreshButton';
 const initialState = {
   data: null,
   savedFilters: null,
-  appliedFilters: [1,2,3],
+  appliedFilters: [1, 2, 3],
 
   loading: false,
   error: null,
@@ -50,16 +50,25 @@ const Dashboard = () => {
   };
 
 
-
-  const handleFilterAdd = () => {
-
+  const handleAddFilter = (filter) => {
+    dispatch({ type: 'ADD_APPLIEDFILTER', filter: filter });
   };
-  const handleFilterRemove = () => {
-
+  const handleUpdateFilter = (filter) => {
+    dispatch({ type: 'UPDATE_SINGLE_APPLIEDFILTER', filter: filter });
   };
-  const handleFilterUpdate = () => {
-
+  const handleRemoveFilter = (filter) => {
+    dispatch({ type: 'REMOVE_APPLIEDFILTER', filter: filter });
   };
+  const handleRemoveAllFilters = () => {
+    dispatch({ type: 'REMOVE_ALL_APPLIEDFILTERS' });
+  };
+  const handleEnableAllFilters = () => {
+    dispatch({ type: 'ENABLE_ALL_APPLIEDFILTERS' });
+  };
+  const handleDisableAllFilters = () => {
+    dispatch({ type: 'DISABLE_ALL_APPLIEDFILTERS' });
+  };
+
   const handleSearchChange = () => {
 
   };
@@ -69,7 +78,9 @@ const Dashboard = () => {
   const handleRefresh = () => {
 
   };
+  const handleSaveFilter = () => {
 
+  };
 
 
   if (!state.initialized) {
@@ -77,18 +88,26 @@ const Dashboard = () => {
   };
   return (
     <>
-      <div className="flex items-center space-x-2 px-2 my-2">
+      <div className="flex items-center space-x-2 px-2 my-2 mt-4">
 
-        <SaveAndSearch />
+        <SaveAndSearch onSave={handleSaveFilter} onChange={handleSearchChange} />
 
-        <DatePicker />
+        <DatePicker onChange={handleDateChange} />
 
-        <RefreshButton />
+        <RefreshButton onClick={handleRefresh} />
 
       </div>
 
       <div className='flex items-center space-x-3 px-2'>
-        <Filters savedFilters={state.savedFilters} appliedFilters={state.appliedFilters} />
+        <Filters
+          appliedFilters={state.appliedFilters}
+          onAddFilter={handleAddFilter}
+          onRemoveFilter={handleRemoveFilter}
+          onUpdateFilter={handleUpdateFilter}
+          onRemoveAllFilters={handleRemoveAllFilters}
+          onEnableAllFilters={handleEnableAllFilters}
+          onDisableAllFilters={handleDisableAllFilters}
+        />
       </div>
     </>
   );

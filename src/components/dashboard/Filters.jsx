@@ -1,51 +1,79 @@
 import React, { useRef, useState } from 'react';
 import { useClickAway } from "@uidotdev/usehooks";
-import { IconButton, Button, Chip, Card, CardContent, TextField } from '@mui/material';
+import { IconButton, Button, Chip } from '@mui/material';
 import { MdOutlineFilterList, MdAdd } from "react-icons/md";
+import EditFilterCard from './EditFilterCard';
+import ChangeFiltersCard from './ChangeFiltersCard';
 
-const Filters = ({ savedFilters, appliedFilters }) => {
+const Filters = ({ appliedFilters, onAddFilter, onUpdateFilter, onRemoveFilter, onRemoveAllFilters, onEnableAllFilters, onDisableAllFilters }) => {
+  const [isSelectOpen, setIsSelectOpen] = useState(false);
 
-  const [showAddFilterCard, setshowAddFilterCard] = useState(false);
+  const [showEditFilterCard, setShowEditFilterCard] = useState(false);
+  const [showChangeFiltersCard, setShowChangeFiltersCard] = useState(false);
 
-  const addButtonRef = useRef(null);
-  const addFilterArea = useClickAway(() => { setshowAddFilterCard(false); });
+  const addFilterButtonRef = useRef(null);
+  const addFilterAreaRef = useClickAway((event) => {
+    if (isSelectOpen || (addFilterButtonRef.current && addFilterButtonRef.current.contains(event.target))) {
+      return;
+    }
+    setShowEditFilterCard(false);
+  });
+
+  const changeFiltersButtonRef = useRef(null);
+  const changeFiltersAreaRef = useClickAway((event) => {
+    if (changeFiltersButtonRef.current && changeFiltersButtonRef.current.contains(event.target)) {
+      return;
+    }
+    setShowChangeFiltersCard(false);
+  });
+
+  const handleToggleEditFilterCard = () => {
+    setShowEditFilterCard(!showEditFilterCard);
+  };
+  const handleToggleChangeFiltersCard = () => {
+    setShowChangeFiltersCard(!showChangeFiltersCard);
+  };
 
   return (
     <>
-      <IconButton sx={{ border: '1px solid rgba(0, 0, 0, 0.23)' }} >
+      <IconButton color='primary' sx={{ border: '1px solid #cfcfcf' }} onClick={handleToggleChangeFiltersCard} ref={changeFiltersButtonRef}>
         <MdOutlineFilterList size={16} />
       </IconButton>
 
-      <Button variant="text" startIcon={<MdAdd />} sx={{ textTransform: 'none' }} onClick={() => setshowAddFilterCard(true)} ref={addButtonRef}>
+      <Button variant="text" startIcon={<MdAdd />} sx={{ textTransform: 'none' }} onClick={handleToggleEditFilterCard} ref={addFilterButtonRef}>
         <span className='font-semibold'>Add filter</span>
       </Button>
 
       <div className='flex items-center space-x-2'>
         {
-          appliedFilters.map((item) => (
+          appliedFilters.map((item, index) => (
             <Chip
-              key={item}
-              label="Clickable Deletable"
+              key={index}
+              label={"Clickable Deletable " + item}
               variant="outlined"
               onClick={() => { }}
-              onDelete={() => { }}
+              onDelete={() => onRemoveFilter(item)}
             />
           ))
         }
       </div>
 
-      {showAddFilterCard && (
-        <Card
-          ref={addFilterArea}
-          sx={{ position: 'absolute', zIndex: 1, width: '300px', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)', mt: 2, }}
-          style={{ top: addButtonRef.current?.offsetTop + 40, left: addButtonRef.current?.offsetLeft }}
-        >
-          <CardContent>
-            <TextField label="Filter Name" variant="outlined" size="small" fullWidth />
-            <TextField label="Filter Value" variant="outlined" size="small" fullWidth sx={{ mt: 2 }} />
-            <Button variant="contained" sx={{ mt: 2, textTransform: 'none' }}>Apply Filter</Button>
-          </CardContent>
-        </Card>
+      {showChangeFiltersCard && (
+        <ChangeFiltersCard
+          areaRef={changeFiltersAreaRef}
+          changeFiltersButtonRef={changeFiltersButtonRef}
+          onClickEnableAll={onEnableAllFilters}
+          onClickDisableAll={onDisableAllFilters}
+          onClickRemoveAll={onRemoveAllFilters} />
+      )}
+
+      {showEditFilterCard && (
+        <EditFilterCard
+          areaRef={addFilterAreaRef}
+          addFilterButtonRef={addFilterButtonRef}
+          setIsSelectOpen={setIsSelectOpen}
+          onClose={() => setShowEditFilterCard(false)}
+          onSave={() => { }} />
       )}
     </>
   );

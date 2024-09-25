@@ -1,27 +1,22 @@
 import React, { useRef, useState } from 'react';
-import { useClickAway } from "@uidotdev/usehooks";
 
-import { Button, Paper, IconButton, Divider, InputBase } from '@mui/material';
+import { ButtonGroup, Button, Paper, InputBase } from '@mui/material';
 import { MdExpandMore, MdOutlineCalendarMonth } from "react-icons/md";
-import ChangeDateCard from './ChangeDateCard';
+import { LuTimerReset } from "react-icons/lu";
+import ChangeDateCard from './modals/ChangeDateCard';
 
 const DatePicker = ({ onChange }) => {
 
-  const [isSelectOpen, setIsSelectOpen] = useState(false);
-  const [showChangeDateCard, setShowChangeDateCard] = useState(false);
-
   const buttonRef = useRef(null);
-  const changeDateAreaRef = useClickAway((event) => {
-    if (isSelectOpen || (buttonRef.current && buttonRef.current.contains(event.target))) {
-      return;
-    }
-    setShowChangeDateCard(false);
-  });
+  const [showChangeDateCard, setShowChangeDateCard] = useState(false);
 
   const handleToggleChangeDateCard = () => {
     setShowChangeDateCard(!showChangeDateCard);
   };
 
+  const handleDateChange = () => {
+
+  };
 
   return (
     <>
@@ -30,31 +25,33 @@ const DatePicker = ({ onChange }) => {
           className='flex-grow'
           component="form"
           variant="outlined"
-          sx={{ p: '2px 4px', display: 'flex', alignItems: 'center' }}
+          sx={{ p: '0', display: 'flex', alignItems: 'center' }}
         >
-          <IconButton color="primary" onClick={handleToggleChangeDateCard} ref={buttonRef}>
-            <MdOutlineCalendarMonth />
-            <MdExpandMore />
-          </IconButton>
-          <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
+          <ButtonGroup variant='text' size="large" aria-label="Small button group" sx={{ backgroundColor: '#f1f1f1' }}>
+            <Button sx={{ padding: '10px' }} ref={buttonRef} onClick={handleToggleChangeDateCard}>
+              <MdOutlineCalendarMonth size={20} />
+              <MdExpandMore size={20} />
+            </Button>
+          </ButtonGroup>
           <InputBase
             sx={{ ml: 1, flex: 1 }}
-            placeholder="Search"
+            placeholder="Last 15 minutes"
           />
-          <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-          <Button edge='end' sx={{ textTransform: 'none' }}>
-            <span className='font-semibold'>Select Date</span>
-          </Button>
+          <ButtonGroup variant='text' size="large" aria-label="Small button group" sx={{ backgroundColor: '#f1f1f1' }}>
+            <Button sx={{ padding: '10px', textTransform: 'none' }}>
+              <LuTimerReset size={20} />
+            </Button>
+          </ButtonGroup>
         </Paper>
       </div>
 
       {showChangeDateCard && (
         <ChangeDateCard
-          areaRef={changeDateAreaRef}
-          changeDateButtonRef={buttonRef}
+          setShow={setShowChangeDateCard}
+          buttonRef={buttonRef}
+          onChange={handleDateChange}
         />
       )}
-
     </>
   );
 };

@@ -5,9 +5,10 @@ import { flattenObjectOrArray } from '../../utils/index';
 
 import SaveAndSearch from '../../components/dashboard/SaveAndSearch';
 import DatePicker from '../../components/dashboard/DatePicker';
-import Filters from '../../components/dashboard/Filters';
+import FilterChip from '../../components/dashboard/FilterChip';
 import RefreshButton from '../../components/dashboard/RefreshButton';
-import Table from '../../components/dashboard/Table';
+import DataTable from '../../components/dashboard/DataTable';
+import ChangeAndAddButtons from '../../components/dashboard/ChangeAndAddButtons';
 
 const initialState = {
   data: null,
@@ -38,7 +39,7 @@ const Dashboard = () => {
     dispatch({ type: 'FETCH_DATA_START' });
     try {
       const response = await fetchAnimeList();
-      const flattenedData = flattenObjectOrArray(response.data);
+      const flattenedData = flattenObjectOrArray(response.users);
       dispatch({ type: 'FETCH_DATA_SUCCESS', data: flattenedData });
     } catch (error) {
       dispatch({ type: 'FETCH_DATA_FAILURE', error: error.message });
@@ -104,6 +105,16 @@ const Dashboard = () => {
     <>
       <div className="flex items-center space-x-2 px-2 my-2 mt-4">
 
+        <ChangeAndAddButtons
+          fields={state.fields.filter(item => item.filterable)}
+          onAddFilter={handleAddFilter}
+          onUpdateFilter={handleUpdateFilter}
+          onRemoveAllFilters={handleRemoveAllFilters}
+          onEnableAllFilters={handleEnableAllFilters}
+          onDisableAllFilters={handleDisableAllFilters}
+          retrieveFieldValues={retrieveFieldValues}
+        />
+
         <SaveAndSearch
           onSave={handleSaveFilter}
           onChange={handleSearchChange}
@@ -120,21 +131,21 @@ const Dashboard = () => {
       </div>
 
       <div className='flex items-center space-x-3 px-2'>
-        <Filters
-          fields={state.fields}
-          appliedFilters={state.appliedFilters}
-          onAddFilter={handleAddFilter}
-          onRemoveFilter={handleRemoveFilter}
-          onUpdateFilter={handleUpdateFilter}
-          onRemoveAllFilters={handleRemoveAllFilters}
-          onEnableAllFilters={handleEnableAllFilters}
-          onDisableAllFilters={handleDisableAllFilters}
-          retrieveFieldValues={retrieveFieldValues}
-        />
+
+        {/* FIELD SELECTOR OFFCANVAS */}
+        {state.appliedFilters.map((item, index) => (
+          <FilterChip
+            key={index}
+            keyName={index}
+            filter={item}
+            onClick={() => { }}
+            onDelete={() => handleRemoveFilter(item)}
+          />
+        ))}
       </div>
 
-      <div className='flex items-center mt-12 px-4 w-full'>
-        <Table
+      <div className='flex items-center mt-4 px-4 w-full'>
+        <DataTable
           data={state.data}
           filters={state.appliedFilters}
         />

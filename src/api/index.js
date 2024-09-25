@@ -2,7 +2,7 @@ import { get, post, put, del } from './client';
 
 
 export const fetchAnimeList = () => {
-  return get('/anime');
+  return get('');
 };
 
 export const fetchSavedFilterList = () => {

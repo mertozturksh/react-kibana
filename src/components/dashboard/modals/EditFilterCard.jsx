@@ -1,8 +1,8 @@
-import React, { useReducer } from 'react';
-import { filterReducer } from '../../reducers/filterReducer';
+import React, { useState, useReducer } from 'react';
+import { useClickAway } from "@uidotdev/usehooks";
 
-import { OPERATORS } from '../../constants';
-
+import { filterReducer } from '../../../reducers/filterReducer';
+import { OPERATORS } from '../../../constants';
 import { Button, Card, CardHeader, CardContent, CardActions, TextField, FormGroup, FormControlLabel, InputLabel, Select, MenuItem, Switch } from '@mui/material';
 
 const initialState = {
@@ -13,8 +13,16 @@ const initialState = {
   label: '',
 };
 
-const EditFilterCard = ({ fields, areaRef, addFilterButtonRef, setIsSelectOpen, onClose, onSave, retrieveFieldValues }) => {
+const EditFilterCard = ({ fields, setShow, buttonRef, onSave, retrieveFieldValues }) => {
   const [state, dispatch] = useReducer(filterReducer, initialState);
+
+  const [isSelectOpen, setIsSelectOpen] = useState(false);
+  const areaRef = useClickAway((event) => {
+    if (isSelectOpen || (buttonRef.current && buttonRef.current.contains(event.target))) {
+      return;
+    }
+    setShow(false);
+  });
 
 
   const handleFieldChange = (event) => {
@@ -40,8 +48,8 @@ const EditFilterCard = ({ fields, areaRef, addFilterButtonRef, setIsSelectOpen, 
     dispatch({ type: 'TOGGLE_CREATECUSTOMLABEL' });
   };
   // add debounce
-  const handleCustomLabelChange = (value) => {
-    dispatch({ type: 'SET_CUSTOMLABEL', label: value });
+  const handleCustomLabelChange = (event) => {
+    dispatch({ type: 'SET_CUSTOMLABEL', label: event.target.value });
   };
 
   const handleClear = () => {
@@ -49,7 +57,7 @@ const EditFilterCard = ({ fields, areaRef, addFilterButtonRef, setIsSelectOpen, 
   };
   const handleCancel = () => {
     handleClear();
-    onClose();
+    setShow(false);
   };
   const handleSave = () => {
 
@@ -69,8 +77,9 @@ const EditFilterCard = ({ fields, areaRef, addFilterButtonRef, setIsSelectOpen, 
           label: state.label,
         });
       }
+      else {
       alert('please type a custom name.');
-      return;
+      }
     }
     else {
       onSave({
@@ -81,14 +90,14 @@ const EditFilterCard = ({ fields, areaRef, addFilterButtonRef, setIsSelectOpen, 
         label: state.field + ' : ' + state.operator,
       });
     }
-    onClose();
+    setShow(false);
   };
 
   return (
     <Card
       ref={areaRef}
       sx={{ position: 'absolute', zIndex: 1, width: '800px', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)', }}
-      style={{ top: addFilterButtonRef.current?.offsetTop + 40, left: addFilterButtonRef.current?.offsetLeft }}
+      style={{ top: buttonRef.current?.offsetTop + 40, left: buttonRef.current?.offsetLeft }}
     >
       <CardHeader
         title="Edit Filter"
@@ -97,6 +106,7 @@ const EditFilterCard = ({ fields, areaRef, addFilterButtonRef, setIsSelectOpen, 
       <CardContent>
         <div className='flex items-center w-full space-x-4 mb-4'>
 
+          {/* FIELD SELECTOR */}
           <div className="flex-grow">
             <InputLabel>Field</InputLabel>
             <Select
@@ -115,6 +125,7 @@ const EditFilterCard = ({ fields, areaRef, addFilterButtonRef, setIsSelectOpen, 
             </Select>
           </div>
 
+          {/* OPERATOR SELECTOR */}
           <div className="w-1/4">
             <InputLabel>Operator</InputLabel>
             <Select
@@ -135,10 +146,10 @@ const EditFilterCard = ({ fields, areaRef, addFilterButtonRef, setIsSelectOpen, 
 
         </div>
 
+        {/* VALUE SELECTOR OR INPUT */}
         {state.field && state.operator && (
           <>
             <InputLabel>Value</InputLabel>
-
             {state.field && state.operator && (state.operator === 'is' || state.operator === 'is_not' || state.operator === 'one_of' || state.operator === 'not_one_of') && (
               <Select
                 disabled={state.field && state.operator ? false : true}
@@ -170,9 +181,24 @@ const EditFilterCard = ({ fields, areaRef, addFilterButtonRef, setIsSelectOpen, 
           </>
         )}
 
-        <FormGroup className='mt-2 mx-2'>
-          <FormControlLabel sx={{ width: 250 }} control={<Switch onChange={handleToggleCreateCustomLabel} />} label="Create custom label?" />
+        {/* CUSTOM LABEL? */}
+        <FormGroup className='my-2 mx-2'>
+          <FormControlLabel sx={{ width: 250 }} control={<Switch checked={state.createCustomLabel} onChange={handleToggleCreateCustomLabel} />} label="Create custom label?" />
         </FormGroup>
+
+        {/* CUSTOM LABEL VALUE */}
+        {state.createCustomLabel && (
+          <>
+            <InputLabel>Custom Label</InputLabel>
+            <TextField
+              fullWidth
+              value={state.label || ''}
+              onChange={handleCustomLabelChange}
+              variant="outlined"
+              sx={{ '& .MuiOutlinedInput-root': { height: '40px' }, backgroundColor: '#fafafa' }}
+            />
+          </>
+        )}
 
       </CardContent>
 

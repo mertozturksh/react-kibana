@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const baseURL = 'https://api.jikan.moe/v4';
+// const baseURL = 'https://api.jikan.moe/v4';
+const baseURL = 'https://dummyjson.com/users';
 
 const client = axios.create({
   baseURL: baseURL,

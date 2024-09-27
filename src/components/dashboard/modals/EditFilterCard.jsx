@@ -3,7 +3,7 @@ import { useClickAway } from "@uidotdev/usehooks";
 
 import { filterReducer } from '../../../reducers/filterReducer';
 import { OPERATORS } from '../../../constants';
-import { Button, Card, CardHeader, CardContent, CardActions, TextField, FormGroup, FormControlLabel, InputLabel, Select, MenuItem, Switch } from '@mui/material';
+import { Button, Card, CardHeader, CardContent, CardActions, TextField, FormGroup, FormControlLabel, InputLabel, Select, MenuItem, Switch, Box, Chip } from '@mui/material';
 
 const initialState = {
   field: null,
@@ -78,7 +78,7 @@ const EditFilterCard = ({ fields, setShow, buttonRef, onSave, retrieveFieldValue
         });
       }
       else {
-      alert('please type a custom name.');
+        alert('please type a custom name.');
       }
     }
     else {
@@ -87,7 +87,7 @@ const EditFilterCard = ({ fields, setShow, buttonRef, onSave, retrieveFieldValue
         field: state.field,
         operator: state.operator,
         value: state.value,
-        label: state.field + ' : ' + state.operator,
+        label: state.field + ' : ' + state.value,
       });
     }
     setShow(false);
@@ -159,7 +159,14 @@ const EditFilterCard = ({ fields, setShow, buttonRef, onSave, retrieveFieldValue
                 onOpen={() => setIsSelectOpen(true)}
                 onClose={() => setIsSelectOpen(false)}
                 onChange={handleValueChange}
-                sx={{ height: 40, backgroundColor: '#fafafa', width: '100%', minWidth: '120px' }}
+                // renderValue={(selected) => (
+                //   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                //     {selected.map((value) => (
+                //       <Chip key={value} label={value} variant="outlined" sx={{borderRadius: '6px'}} />
+                //     ))}
+                //   </Box>
+                // )}
+                sx={{ minHeight: 40, backgroundColor: '#fafafa', width: '100%', minWidth: '120px' }}
               >
                 <MenuItem disabled value="">Select an value</MenuItem>
                 {(retrieveFieldValues(state.field)).map((item) => (

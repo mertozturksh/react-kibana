@@ -26,6 +26,8 @@ export const OPERATORS = [
   { name: 'is not one of', value: 'not_one_of' },
   // { name: 'exists', value: 'exists' },
   // { name: 'does not exists', value: 'not_exists' },
+  // { name: 'greater than', value: 'greater' },
+  // { name: 'less than', value: 'less' },
 ];
 
 export const DUMMY_VALUES = [

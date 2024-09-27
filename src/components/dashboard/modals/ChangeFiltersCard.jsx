@@ -6,11 +6,18 @@ import { MdVisibility, MdVisibilityOff, MdDelete } from "react-icons/md";
 
 const ChangeFiltersCard = ({ setShow, buttonRef, onClickEnableAll, onClickDisableAll, onClickRemoveAll }) => {
 
+  const handleAction = (action) => {
+    return () => {
+      action();
+      setShow(false);
+    };
+  };
+
   const filterActions = [
-    { type: 'button', name: 'Enable all', icon: MdVisibility, action: onClickEnableAll },
-    { type: 'button', name: 'Disable all', icon: MdVisibilityOff, action: onClickDisableAll },
+    { type: 'button', name: 'Enable all', icon: MdVisibility, action: handleAction(onClickEnableAll) },
+    { type: 'button', name: 'Disable all', icon: MdVisibilityOff, action: handleAction(onClickDisableAll) },
     { type: 'divider' },
-    { type: 'button', name: 'Remove all', icon: MdDelete, action: onClickRemoveAll },
+    { type: 'button', name: 'Remove all', icon: MdDelete, action: handleAction(onClickRemoveAll) },
   ];
 
   const areaRef = useClickAway((event) => {

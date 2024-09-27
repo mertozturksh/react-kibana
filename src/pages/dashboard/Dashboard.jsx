@@ -1,13 +1,14 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useEffect, useMemo, useReducer } from 'react';
 import { dataReducer } from '../../reducers/dataReducer';
 import { fetchAnimeList, fetchSavedFilterList } from '../../api/index';
-import { flattenObjectOrArray } from '../../utils/index';
+import { flattenObjectOrArray, applyFilters } from '../../utils/index';
+import { MOCK_DATA } from '../../constants/data';
 
-import SaveAndSearch from '../../components/dashboard/SaveAndSearch';
+import DataTable from '../../components/dashboard/DataTable';
 import DatePicker from '../../components/dashboard/DatePicker';
 import FilterChip from '../../components/dashboard/FilterChip';
 import RefreshButton from '../../components/dashboard/RefreshButton';
-import DataTable from '../../components/dashboard/DataTable';
+import SaveAndSearch from '../../components/dashboard/SaveAndSearch';
 import ChangeAndAddButtons from '../../components/dashboard/ChangeAndAddButtons';
 
 const initialState = {
@@ -25,6 +26,13 @@ const initialState = {
 
 const Dashboard = () => {
   const [state, dispatch] = useReducer(dataReducer, initialState);
+  const filteredData = useMemo(() => {
+    if (!state.data || state.appliedFilters.length === 0) {
+      return state.data;
+    }
+
+    return applyFilters(state.data, state.appliedFilters);
+  }, [state.data, state.appliedFilters]);
 
   useEffect(() => {
     init();
@@ -38,8 +46,8 @@ const Dashboard = () => {
   const fetchData = async () => {
     dispatch({ type: 'FETCH_DATA_START' });
     try {
-      const response = await fetchAnimeList();
-      const flattenedData = flattenObjectOrArray(response.users);
+      const response = MOCK_DATA;
+      const flattenedData = flattenObjectOrArray(response);
       dispatch({ type: 'FETCH_DATA_SUCCESS', data: flattenedData });
     } catch (error) {
       dispatch({ type: 'FETCH_DATA_FAILURE', error: error.message });
@@ -144,10 +152,9 @@ const Dashboard = () => {
         ))}
       </div>
 
-      <div className='flex items-center mt-4 px-4 w-full'>
+      <div className='flex items-center my-4 px-4 w-full'>
         <DataTable
-          data={state.data}
-          filters={state.appliedFilters}
+          data={filteredData}
         />
       </div>
     </>

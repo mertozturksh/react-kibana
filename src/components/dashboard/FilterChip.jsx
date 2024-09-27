@@ -10,6 +10,7 @@ const FilterChip = ({ keyName, filter, onClick, onDelete }) => {
       variant="outlined"
       onClick={onClick}
       onDelete={onDelete}
+      sx={{ borderRadius: '8px' }}
     />
   );
 };

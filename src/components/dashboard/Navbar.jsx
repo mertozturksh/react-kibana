@@ -14,14 +14,13 @@ const Navbar = () => {
     >
       <Toolbar className="flex justify-between">
         <div className="flex items-center space-x-5">
-          <Avatar variant='rounded' sx={{ bgcolor: '#4db6ac' }}>D</Avatar>
           <Button
             color="primary"
             variant="outlined"
             size="small"
             sx={{ borderColor: '#e0e0e0', backgroundColor: '#e3f2fd', textTransform: 'none', fontSize: '0.875rem', }}
           >
-            <span className='font-semibold'>Discover</span>
+            <span className='font-semibold'>Discover Data</span>
           </Button>
 
           <MdCheck />

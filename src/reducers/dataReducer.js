@@ -1,3 +1,5 @@
+import { getFilters, addFilter, updateFilter, deleteFilter, getSavedFilters, addSavedFilter, updateSavedFilter, deleteSavedFilter } from '../services/localStorageService';
+
 export const dataReducer = (state, action) => {
   switch (action.type) {
 

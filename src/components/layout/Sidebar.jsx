@@ -24,7 +24,7 @@ export default function Sidebar({ children }) {
         <nav className="h-full flex flex-col bg-white border-r shadow-sm overflow-y-auto custom-scrollbar">
           <div className="p-4 pb-2 flex justify-between items-center">
             {/* <img src={logo} className={`overflow-hidden transition-all ${expanded ? "w-32" : "w-0"}`} /> */}
-            <span className={`overflow-hidden transition-all ${expanded ? "w-32" : "w-0"}`}>Dashboard</span>
+            <span className={`font-semibold text-xl overflow-hidden transition-all ${expanded ? "w-32" : "w-0"}`}>Filter Data</span>
             <button onClick={() => setExpanded((curr) => !curr)} className="p-1.5 rounded-lg bg-gray-50 hover:bg-gray-100">
               {expanded ? <LuChevronFirst size={20} /> : <LuChevronLast size={20} />}
             </button>

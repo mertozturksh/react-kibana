@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useReducer } from 'react';
 import { dataReducer } from '../../reducers/dataReducer';
-import { fetchAnimeList, fetchSavedFilterList } from '../../api/index';
+import { _fetchData } from '../../api/index';
+import { getSavedFilters } from '../../services/localStorageService';
 import { flattenObjectOrArray, applyFilters } from '../../utils/index';
-import { MOCK_DATA } from '../../constants/data';
 
 import Navbar from '../../components/dashboard/Navbar';
 import DataTable from '../../components/dashboard/DataTable';
@@ -15,7 +15,7 @@ import ChangeAndAddButtons from '../../components/dashboard/ChangeAndAddButtons'
 const initialState = {
   data: null,
   fields: null,
-  savedFilters: null,
+  savedFilters: [],
   appliedFilters: [],
   searchText: null,
   date: null,
@@ -47,7 +47,7 @@ const Dashboard = () => {
   const fetchData = async () => {
     dispatch({ type: 'FETCH_DATA_START' });
     try {
-      const response = MOCK_DATA;
+      const response = _fetchData();
       const flattenedData = flattenObjectOrArray(response);
       dispatch({ type: 'FETCH_DATA_SUCCESS', data: flattenedData });
     } catch (error) {
@@ -57,7 +57,7 @@ const Dashboard = () => {
   const fetchSavedFilters = async () => {
     dispatch({ type: 'FETCH_SAVEDFILTERS_START' });
     try {
-      const response = await fetchSavedFilterList();
+      const response = getSavedFilters();
       dispatch({ type: 'FETCH_SAVEDFILTERS_SUCCESS', data: response.data });
     } catch (error) {
       dispatch({ type: 'FETCH_SAVEDFILTERS_FAILURE', error: error.message });

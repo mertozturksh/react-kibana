@@ -1,5 +1,10 @@
 import { get, post, put, del } from './client';
+import { MOCK_DATA } from '../constants/data';
 
+
+export const _fetchData = () => {
+  return MOCK_DATA;
+};
 
 export const fetchAnimeList = () => {
   return get('');

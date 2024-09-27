@@ -5,6 +5,11 @@ const fieldStructure = {
   filterable: true,
 };
 
+const savedFieldStructure = {
+  name: null,
+  filters: [filterStructure,],
+};
+
 const filterStructure = {
   enabled: true,
   field: null,

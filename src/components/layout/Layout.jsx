@@ -1,12 +1,20 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import NavBar from "./Navbar";
 import Sidebar, { SidebarItem } from "./Sidebar";
-import { LuLayoutDashboard, LuStickyNote, LuCalendar, LuLayers, LuFlag, LuSettings, LuLifeBuoy } from "react-icons/lu";
+import { LuLayoutDashboard, LuStickyNote, LuCalendar, LuLayers, LuSettings } from "react-icons/lu";
+
+const items = [
+  { type: 'item', name: 'Dashboard', to: '/dashboard', 'isActive': '/dashboard', 'icon': LuLayoutDashboard },
+  { type: 'divider', margin: 'my-5' },
+  { type: 'item', name: 'Projects', to: '/projects', 'isActive': '/projects', 'icon': LuStickyNote },
+  { type: 'item', name: 'Calendar', to: '/calendar', 'isActive': '/calendar', 'icon': LuCalendar },
+  { type: 'item', name: 'Tasks', to: '/tasks', 'isActive': '/tasks', 'icon': LuLayers },
+  { type: 'divider', margin: 'my-3' },
+  { type: 'item', name: 'Settings', to: '/settings', 'isActive': '/settings', 'icon': LuSettings },
+];
 
 const Layout = ({ children }) => {
   const location = useLocation();
-
   const isActive = (path) => location.pathname === path;
 
   return (
@@ -14,47 +22,22 @@ const Layout = ({ children }) => {
       <div className="flex">
         <Sidebar>
           <div className='mt-5' />
-
-          <Link to="/dashboard">
-            <SidebarItem icon={<LuLayoutDashboard size={20} />} text="Dashboard" active={isActive('/') || isActive('/dashboard')} />
-          </Link>
-
-          <hr className="my-5" />
-
-          <Link to="/projects">
-            <SidebarItem icon={<LuStickyNote size={20} />} text="Projects" alert active={isActive('/projects')} />
-          </Link>
-
-          <Link to="/calendar">
-            <SidebarItem icon={<LuCalendar size={20} />} text="Calendar" active={isActive('/calendar')} />
-          </Link>
-
-          <Link to="/tasks">
-            <SidebarItem icon={<LuLayers size={20} />} text="Tasks" active={isActive('/tasks')} />
-          </Link>
-
-          <Link to="/reporting">
-            <SidebarItem icon={<LuFlag size={20} />} text="Reporting" active={isActive('/reporting')} />
-          </Link>
-
-          <hr className="my-3" />
-
-          <Link to="/settings">
-            <SidebarItem icon={<LuSettings size={20} />} text="Settings" active={isActive('/settings')} />
-          </Link>
-
-          <Link to="/help">
-            <SidebarItem icon={<LuLifeBuoy size={20} />} text="Help" active={isActive('/help')} />
-          </Link>
-
+          {
+            items.map((item) => (
+              item.type === 'divider' ? (
+                <hr className={item.margin} />
+              ) : (
+                <Link to={item.to}>
+                  <SidebarItem icon={<item.icon size={20} />} text={item.name} active={isActive(item.isActive)} />
+                </Link>
+              )
+            ))
+          }
         </Sidebar>
-
-        <NavBar />
-
         <div className='w-screen'>
           {children}
         </div>
-      </div>
+      </div >
     </>
   )
 }

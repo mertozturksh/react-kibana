@@ -4,6 +4,7 @@ import { fetchAnimeList, fetchSavedFilterList } from '../../api/index';
 import { flattenObjectOrArray, applyFilters } from '../../utils/index';
 import { MOCK_DATA } from '../../constants/data';
 
+import Navbar from '../../components/dashboard/Navbar';
 import DataTable from '../../components/dashboard/DataTable';
 import DatePicker from '../../components/dashboard/DatePicker';
 import FilterChip from '../../components/dashboard/FilterChip';
@@ -111,7 +112,10 @@ const Dashboard = () => {
 
   return (
     <>
-      <div className="flex items-center space-x-2 px-2 my-2 mt-4">
+
+      <Navbar />
+
+      <div className="flex items-center space-x-2 px-4 my-2">
 
         <ChangeAndAddButtons
           fields={state.fields.filter(item => item.filterable)}
@@ -138,7 +142,7 @@ const Dashboard = () => {
 
       </div>
 
-      <div className='flex items-center space-x-3 px-2'>
+      <div className='flex items-center space-x-3 px-4'>
 
         {/* FIELD SELECTOR OFFCANVAS */}
         {state.appliedFilters.map((item, index) => (
@@ -152,7 +156,7 @@ const Dashboard = () => {
         ))}
       </div>
 
-      <div className='flex items-center my-4 px-4 w-full'>
+      <div className='flex items-center my-2 px-4 w-full'>
         <DataTable
           data={filteredData}
         />

@@ -14,6 +14,12 @@ export const getSavedFilters = () => {
 
 export const addSavedFilter = (newFilter) => {
   const filters = getSavedFilters();
+
+  const isDuplicate = filters.some(filter => filter.name === newFilter.name);
+  if (isDuplicate) {
+    return null;
+  }
+
   const id = Date.now();
   const filterWithId = { id, ...newFilter };
   filters.push(filterWithId);

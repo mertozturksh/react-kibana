@@ -5,11 +5,11 @@ import { LuLayoutDashboard, LuStickyNote, LuCalendar, LuLayers, LuSettings } fro
 
 const items = [
   { type: 'item', name: 'Dashboard', to: '/dashboard', 'isActive': '/dashboard', 'icon': LuLayoutDashboard },
-  { type: 'divider', margin: 'my-5' },
+  { type: 'divider', name: 'div1', margin: 'my-5' },
   { type: 'item', name: 'Projects', to: '/projects', 'isActive': '/projects', 'icon': LuStickyNote },
   { type: 'item', name: 'Calendar', to: '/calendar', 'isActive': '/calendar', 'icon': LuCalendar },
   { type: 'item', name: 'Tasks', to: '/tasks', 'isActive': '/tasks', 'icon': LuLayers },
-  { type: 'divider', margin: 'my-3' },
+  { type: 'divider', name: 'div2', margin: 'my-3' },
   { type: 'item', name: 'Settings', to: '/settings', 'isActive': '/settings', 'icon': LuSettings },
 ];
 
@@ -25,9 +25,9 @@ const Layout = ({ children }) => {
           {
             items.map((item) => (
               item.type === 'divider' ? (
-                <hr className={item.margin} />
+                <hr key={item.name} className={item.margin} />
               ) : (
-                <Link to={item.to}>
+                <Link key={item.name} to={item.to}>
                   <SidebarItem icon={<item.icon size={20} />} text={item.name} active={isActive(item.isActive)} />
                 </Link>
               )

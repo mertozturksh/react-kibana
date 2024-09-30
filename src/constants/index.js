@@ -5,17 +5,17 @@ const fieldStructure = {
   filterable: true,
 };
 
-const savedFieldStructure = {
-  name: null,
-  filters: [filterStructure,],
-};
-
 const filterStructure = {
   enabled: true,
   field: null,
   operator: null,
   value: null,
   label: null,
+};
+
+const savedFieldStructure = {
+  name: null,
+  filters: [], //[filterStructure,],
 };
 
 const operatorStructure = {

@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useReducer } from 'react';
 import { dataReducer } from '../../reducers/dataReducer';
 import { _fetchData } from '../../api/index';
-import { getSavedFilters } from '../../services/localStorageService';
 import { flattenObjectOrArray, applyFilters } from '../../utils/index';
 
 import Navbar from '../../components/dashboard/Navbar';
@@ -57,8 +56,7 @@ const Dashboard = () => {
   const fetchSavedFilters = async () => {
     dispatch({ type: 'FETCH_SAVEDFILTERS_START' });
     try {
-      const response = getSavedFilters();
-      dispatch({ type: 'FETCH_SAVEDFILTERS_SUCCESS', data: response.data });
+      dispatch({ type: 'FETCH_SAVEDFILTERS_SUCCESS' });
     } catch (error) {
       dispatch({ type: 'FETCH_SAVEDFILTERS_FAILURE', error: error.message });
     }
@@ -84,6 +82,16 @@ const Dashboard = () => {
     dispatch({ type: 'DISABLE_ALL_APPLIEDFILTERS' });
   };
 
+  const handleSaveFilter = (name) => {
+    dispatch({ type: 'SAVE_FILTER', name: name });
+  };
+  const handleApplySavedFilter = (id) => {
+    dispatch({ type: 'APPLY_SAVEDFILTER', filterId: id });
+  };
+  const handleDeleteSavedFilter = (id) => {
+    dispatch({ type: 'DELETE_SAVEDFILTER', filterId: id });
+  };
+
   const handleSearchChange = () => {
 
   };
@@ -93,9 +101,7 @@ const Dashboard = () => {
   const handleRefresh = () => {
     fetchData();
   };
-  const handleSaveFilter = () => {
 
-  };
 
   const retrieveFieldValues = (field) => {
     return [...new Set(
@@ -110,10 +116,17 @@ const Dashboard = () => {
     return <p>Loading...</p>
   }
 
+
   return (
     <>
 
-      <Navbar />
+      <Navbar
+        saveButtonDisabled={state.appliedFilters.length === 0}
+        savedFilters={state.savedFilters}
+        onSave={handleSaveFilter}
+        onApplySavedFilter={handleApplySavedFilter}
+        onDeleteSavedFilter={handleDeleteSavedFilter}
+      />
 
       <div className="flex items-center space-x-2 px-4 my-2">
 
@@ -128,7 +141,6 @@ const Dashboard = () => {
         />
 
         <SaveAndSearch
-          onSave={handleSaveFilter}
           onChange={handleSearchChange}
         />
 

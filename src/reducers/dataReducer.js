@@ -1,4 +1,4 @@
-import { getFilters, addFilter, updateFilter, deleteFilter, getSavedFilters, addSavedFilter, updateSavedFilter, deleteSavedFilter } from '../services/localStorageService';
+import { getSavedFilters, addSavedFilter, updateSavedFilter, deleteSavedFilter } from '../services/localStorageService';
 
 export const dataReducer = (state, action) => {
   switch (action.type) {
@@ -75,14 +75,38 @@ export const dataReducer = (state, action) => {
 
 
 
-    
+
     //#region savedFilters
     case 'FETCH_SAVEDFILTERS_START':
       return { ...state, loading: true, error: null };
-    case 'FETCH_SAVEDFILTERS_SUCCESS':
-      return { ...state, loading: false, savedFilters: action.data };
+    case 'FETCH_SAVEDFILTERS_SUCCESS': {
+      const savedFilters = getSavedFilters();
+      return { ...state, loading: false, savedFilters: savedFilters };
+    }
     case 'FETCH_SAVEDFILTERS_FAILURE':
       return { ...state, loading: false, error: action.error };
+
+
+    case 'SAVE_FILTER': {
+      addSavedFilter({
+        name: action.name,
+        filters: state.appliedFilters,
+      });
+      const savedFilters = getSavedFilters();
+      return { ...state, savedFilters: savedFilters };
+    }
+    case 'APPLY_SAVEDFILTER': {
+      var savedFilter = state.savedFilters.find(x => x.id === action.filterId);
+
+      if (!savedFilter) {
+        return state;
+      }
+      return { ...state, appliedFilters: savedFilter.filters };
+    }
+    case 'DELETE_SAVEDFILTER': {
+      var savedFilters = deleteSavedFilter(action.filterId);
+      return { ...state, savedFilters: savedFilters };
+    }
     //#endregion
 
     default:

@@ -38,7 +38,7 @@ const OpenFilterButtonCard = ({ savedFilters, onApplySavedFilter, onDeleteSavedF
                 key={index}
               >
                 <ListItemText primary={item.name} />
-                <div className='space-x-3'>
+                <div className='ml-5 space-x-3'>
                   <IconButton edge="end" aria-label="apply" onClick={() => onApplySavedFilter(item.id)}>
                     <MdContentCopy />
                   </IconButton>

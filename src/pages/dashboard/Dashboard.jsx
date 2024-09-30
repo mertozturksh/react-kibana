@@ -102,7 +102,6 @@ const Dashboard = () => {
     fetchData();
   };
 
-
   const retrieveFieldValues = (field) => {
     return [...new Set(
       state.data
@@ -115,7 +114,6 @@ const Dashboard = () => {
   if (!state.initialized) {
     return <p>Loading...</p>
   }
-
 
   return (
     <>

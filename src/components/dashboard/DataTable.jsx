@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 const DataTable = ({ data }) => {
   
   return (
-    <TableContainer component={Paper} sx={{ width: '100%' }}>
+    <TableContainer component={Paper} sx={{ width: '100%', maxHeight: '80vh', overflow: 'auto' }}>
       <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
         <TableHead>
           <TableRow>

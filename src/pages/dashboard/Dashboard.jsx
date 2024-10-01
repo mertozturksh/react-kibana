@@ -3,6 +3,7 @@ import { dataReducer } from '../../reducers/dataReducer';
 import { _fetchData } from '../../api/index';
 import { flattenObjectOrArray, applyFilters } from '../../utils/index';
 
+import Loader from '../../components/constants/Loader';
 import Navbar from '../../components/dashboard/Navbar';
 import DataTable from '../../components/dashboard/DataTable';
 import DatePicker from '../../components/dashboard/DatePicker';
@@ -112,7 +113,7 @@ const Dashboard = () => {
 
 
   if (!state.initialized) {
-    return <p>Loading...</p>
+    return <Loader />
   }
 
   return (
@@ -153,15 +154,15 @@ const Dashboard = () => {
       </div>
 
       <div className='flex items-center space-x-3 px-4'>
-
-        {/* FIELD SELECTOR OFFCANVAS */}
         {state.appliedFilters.map((item, index) => (
           <FilterChip
             key={index}
             keyName={index}
+            fields={state.fields.filter(item => item.filterable)}
             filter={item}
-            onClick={() => { }}
+            retrieveFieldValues={retrieveFieldValues}
             onDelete={() => handleRemoveFilter(item)}
+            onSave={() => { }}
           />
         ))}
       </div>

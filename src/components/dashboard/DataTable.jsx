@@ -1,22 +1,28 @@
 import React from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
+const columns = [
+  { id: 'timespan', label: 'Timespan', minWidth: '230' },
+  { id: 'document', label: 'Document', minWidth: '250' },
+];
+
 const DataTable = ({ data }) => {
-  
+
   return (
-    <TableContainer component={Paper} sx={{ width: '100%', maxHeight: '80vh', overflow: 'auto' }}>
-      <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+    <TableContainer component={Paper} sx={{ width: '100%', maxHeight: '80vh', overflow: 'auto', zIndex: '0' }}>
+      <Table size="small" stickyHeader>
         <TableHead>
           <TableRow>
-            <TableCell style={{ width: 250 }}>Time</TableCell>
-            <TableCell>Document</TableCell>
+            {columns.map((column) => (
+              <TableCell key={column.id} style={{ minWidth: column.minWidth }}>{column.label}</TableCell>
+            ))}
           </TableRow>
         </TableHead>
 
         <TableBody>
           {data.map((row, index) => (
             <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-              <TableCell component="th" scope="row" sx={{ width: 250, whiteSpace: 'nowrap' }}>
+              <TableCell component="th" scope="row" sx={{ width: 230, whiteSpace: 'nowrap' }}>
                 {row.timestamp}
               </TableCell>
 

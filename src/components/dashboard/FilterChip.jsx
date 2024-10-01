@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Chip } from '@mui/material';
 
-// TODO
-// customize for filter attributes. eg: operator type and data...
-const FilterChip = ({ keyName, filter, onClick, onDelete }) => {
+import CustomPopper from '../constants/CustomPopper';
+import FilterModal from './modals/FilterModal';
+
+const FilterChip = ({ keyName, fields, retrieveFieldValues, filter, onDelete, onSave }) => {
 
   const negativeOperator = ['is_not', 'not_one_of', 'not_exists',].includes(filter.operator);
-
   const label = (
     <span>
       {negativeOperator && (
@@ -16,19 +16,50 @@ const FilterChip = ({ keyName, filter, onClick, onDelete }) => {
     </span>
   );
 
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(anchorEl ? null : event.currentTarget);
+  };
+
+  const handleCancel = () => {
+    handleClick();
+  };
+  const handleSave = (values) => {
+    onSave(values);
+    handleClick();
+  };
+
   return (
-    <Chip
-      label={label}
-      variant="outlined"
-      onClick={onClick}
-      onDelete={onDelete}
-      sx={{
-        borderRadius: '8px',
-        opacity: filter.enabled ? 1 : 0.5,
-        backgroundColor: filter.enabled ? '#default' : '#e0e0e0',
-        borderColor: negativeOperator ? '#ff1744' : 'default',
-      }}
-    />
+    <>
+      <Chip
+        label={label}
+        variant="outlined"
+        onClick={handleClick}
+        onDelete={onDelete}
+        sx={{
+          borderRadius: '7px',
+          opacity: filter.enabled ? 1 : 0.5,
+          backgroundColor: filter.enabled ? '#default' : '#e0e0e0',
+          borderColor: negativeOperator ? '#ff1744' : 'default',
+        }}
+      />
+
+      {open && (
+        <CustomPopper open={open} anchorEl={anchorEl} placement='bottom-start'>
+
+          <FilterModal
+            title={'Edit Filter'}
+            fields={fields}
+            defaultValues={filter}
+            retrieveFieldValues={retrieveFieldValues}
+            onSave={handleSave}
+            onCancel={handleCancel}
+          />
+
+        </CustomPopper>
+      )}
+    </>
   );
 };
 

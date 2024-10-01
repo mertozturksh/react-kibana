@@ -25,14 +25,14 @@ const operatorStructure = {
 
 
 export const OPERATORS = [
-  { name: 'is', value: 'is' },
-  { name: 'is not', value: 'is_not' },
-  { name: 'is one of', value: 'one_of' },
-  { name: 'is not one of', value: 'not_one_of' },
-  // { name: 'exists', value: 'exists' },
-  // { name: 'does not exists', value: 'not_exists' },
-  // { name: 'greater than', value: 'greater' },
-  // { name: 'less than', value: 'less' },
+  { name: 'is', value: 'is', negation: false },
+  { name: 'is not', value: 'is_not', negation: true },
+  { name: 'is one of', value: 'one_of', negation: false },
+  { name: 'is not one of', value: 'not_one_of', negation: true },
+  // { name: 'exists', value: 'exists', negation: false },
+  // { name: 'does not exists', value: 'not_exists', negation: true },
+  // { name: 'greater than', value: 'greater', negation: false },
+  // { name: 'less than', value: 'less', negation: false },
 ];
 
 export const DUMMY_VALUES = [

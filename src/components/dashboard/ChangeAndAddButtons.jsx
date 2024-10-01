@@ -4,7 +4,7 @@ import { ButtonGroup } from '@mui/material';
 import ChangeFilterButtonCard from './modals/ChangeFilterButtonCard';
 import AddFilterButtonCard from './modals/AddFilterButtonCard';
 
-const ChangeAndAddButtons = ({ fields, onAddFilter, onUpdateFilter, onRemoveAllFilters, onEnableAllFilters, onDisableAllFilters, retrieveFieldValues }) => {
+const ChangeAndAddButtons = ({ fields, onAddFilter, onRemoveAllFilters, onEnableAllFilters, onDisableAllFilters, retrieveFieldValues }) => {
 
   return (
     <>

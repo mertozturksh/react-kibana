@@ -1,10 +1,11 @@
-import React, { useState, useReducer, useEffect } from 'react';
+import React, { useState, useReducer } from 'react';
 
 import { filterReducer } from '../../../reducers/filterReducer';
 import { OPERATORS } from '../../../constants';
 import { Button, Paper, TextField, FormGroup, FormControlLabel, InputLabel, Select, MenuItem, Switch, Typography } from '@mui/material';
 
 const initialState = {
+  id: Date.now(),
   field: null,
   operator: null,
   value: null,
@@ -15,11 +16,12 @@ const initialState = {
 const setInitialState = (defaultValues) => {
   if (defaultValues) {
     return {
+      id: defaultValues.id || Date.now(),
       field: defaultValues.field || null,
       operator: defaultValues.operator || null,
       value: defaultValues.value || null,
-      createCustomLabel: true,
       label: defaultValues.label || '',
+      createCustomLabel: defaultValues.label === defaultValues.field + ' : ' + defaultValues.value ? false : true,
     }
   }
   else {
@@ -76,6 +78,7 @@ const FilterModal = ({ title, fields, defaultValues, onSave, onCancel, retrieveF
       // label required.
       if (state.label) {
         onSave({
+          id: state.id,
           enabled: true,
           field: state.field,
           operator: state.operator,
@@ -89,6 +92,7 @@ const FilterModal = ({ title, fields, defaultValues, onSave, onCancel, retrieveF
     }
     else {
       onSave({
+        id: state.id,
         enabled: true,
         field: state.field,
         operator: state.operator,

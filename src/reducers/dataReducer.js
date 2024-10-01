@@ -32,7 +32,7 @@ export const dataReducer = (state, action) => {
       };
     case 'UPDATE_SINGLE_APPLIEDFILTER': {
       const updatedFilters = state.appliedFilters.map((f) =>
-        f === action.filter ? action.filter : f
+        f.id === action.filter.id ? action.filter : f
       );
       return { ...state, appliedFilters: updatedFilters };
     }
@@ -41,7 +41,7 @@ export const dataReducer = (state, action) => {
     case 'REMOVE_APPLIEDFILTER':
       return {
         ...state,
-        appliedFilters: state.appliedFilters.filter(f => f !== action.filter)
+        appliedFilters: state.appliedFilters.filter(f => f.id !== action.filter.id)
       };
     case 'REMOVE_ALL_APPLIEDFILTERS':
       return {

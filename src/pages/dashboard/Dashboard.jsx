@@ -132,7 +132,6 @@ const Dashboard = () => {
         <ChangeAndAddButtons
           fields={state.fields.filter(item => item.filterable)}
           onAddFilter={handleAddFilter}
-          onUpdateFilter={handleUpdateFilter}
           onRemoveAllFilters={handleRemoveAllFilters}
           onEnableAllFilters={handleEnableAllFilters}
           onDisableAllFilters={handleDisableAllFilters}
@@ -162,7 +161,7 @@ const Dashboard = () => {
             filter={item}
             retrieveFieldValues={retrieveFieldValues}
             onDelete={() => handleRemoveFilter(item)}
-            onSave={() => { }}
+            onSave={handleUpdateFilter}
           />
         ))}
       </div>

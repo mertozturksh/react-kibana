@@ -2,15 +2,15 @@ import React from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
 const columns = [
-  { id: 'timespan', label: 'Timespan', minWidth: '230' },
+  { id: 'timestamp', label: 'Timestamp', minWidth: '230' },
   { id: 'document', label: 'Document', minWidth: '250' },
 ];
 
 const DataTable = ({ data }) => {
 
   return (
-    <TableContainer component={Paper} sx={{ width: '100%', maxHeight: '80vh', overflow: 'auto', zIndex: '0' }}>
-      <Table size="small" stickyHeader>
+    <TableContainer component={Paper} sx={{ maxHeight: '77vh', overflow: 'auto', zIndex: '0' }}>
+      <Table size="small"> {/*stickyHeader */}
         <TableHead>
           <TableRow>
             {columns.map((column) => (

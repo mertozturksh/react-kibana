@@ -5,7 +5,7 @@ import logo from "../../assets/logo.png";
 const SidebarContext = createContext();
 
 export default function Sidebar({ children }) {
-  const [expanded, setExpanded] = useState(true)
+  const [expanded, setExpanded] = useState(false);
   return (
     <>
       <style>

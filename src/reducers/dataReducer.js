@@ -41,7 +41,7 @@ export const dataReducer = (state, action) => {
     case 'REMOVE_APPLIEDFILTER':
       return {
         ...state,
-        appliedFilters: state.appliedFilters.filter(f => f.id !== action.filter.id)
+        appliedFilters: state.appliedFilters.filter(f => f.id !== action.filterId)
       };
     case 'REMOVE_ALL_APPLIEDFILTERS':
       return {

@@ -18,7 +18,7 @@ const AddFilterButtonCard = ({ fields, onSave, retrieveFieldValues }) => {
     handleClick();
   };
   const handleSave = (values) => {
-    onSave(values);
+    onSave({ ...values, id: Date.now() });
     handleClick();
   };
 

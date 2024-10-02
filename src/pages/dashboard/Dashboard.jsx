@@ -6,6 +6,7 @@ import { flattenObjectOrArray, applyFilters } from '../../utils/index';
 import Loader from '../../components/constants/Loader';
 import Navbar from '../../components/dashboard/Navbar';
 import DataTable from '../../components/dashboard/DataTable';
+import FieldPanel from '../../components/dashboard/FieldPanel';
 import DatePicker from '../../components/dashboard/DatePicker';
 import FilterChip from '../../components/dashboard/FilterChip';
 import RefreshButton from '../../components/dashboard/RefreshButton';
@@ -65,13 +66,15 @@ const Dashboard = () => {
 
 
   const handleAddFilter = (filter) => {
-    dispatch({ type: 'ADD_APPLIEDFILTER', filter: filter });
+    console.log(filter);
+
+    dispatch({ type: 'ADD_APPLIEDFILTER', filter });
   };
   const handleUpdateFilter = (filter) => {
-    dispatch({ type: 'UPDATE_SINGLE_APPLIEDFILTER', filter: filter });
+    dispatch({ type: 'UPDATE_SINGLE_APPLIEDFILTER', filter });
   };
-  const handleRemoveFilter = (filter) => {
-    dispatch({ type: 'REMOVE_APPLIEDFILTER', filter: filter });
+  const handleRemoveFilter = (filterId) => {
+    dispatch({ type: 'REMOVE_APPLIEDFILTER', filterId });
   };
   const handleRemoveAllFilters = () => {
     dispatch({ type: 'REMOVE_ALL_APPLIEDFILTERS' });
@@ -86,11 +89,11 @@ const Dashboard = () => {
   const handleSaveFilter = (name) => {
     dispatch({ type: 'SAVE_FILTER', name: name });
   };
-  const handleApplySavedFilter = (id) => {
-    dispatch({ type: 'APPLY_SAVEDFILTER', filterId: id });
+  const handleApplySavedFilter = (filterId) => {
+    dispatch({ type: 'APPLY_SAVEDFILTER', filterId });
   };
-  const handleDeleteSavedFilter = (id) => {
-    dispatch({ type: 'DELETE_SAVEDFILTER', filterId: id });
+  const handleDeleteSavedFilter = (filterId) => {
+    dispatch({ type: 'DELETE_SAVEDFILTER', filterId });
   };
 
   const handleSearchChange = () => {
@@ -117,7 +120,7 @@ const Dashboard = () => {
   }
 
   return (
-    <>
+    <div className='flex flex-col h-screen'>
 
       <Navbar
         saveButtonDisabled={state.appliedFilters.length === 0}
@@ -153,25 +156,30 @@ const Dashboard = () => {
       </div>
 
       <div className='flex items-center space-x-3 px-4'>
-        {state.appliedFilters.map((item, index) => (
+        {state.appliedFilters.map((item) => (
           <FilterChip
-            key={index}
-            keyName={index}
-            fields={state.fields.filter(item => item.filterable)}
+            key={item.id}
             filter={item}
+            fields={state.fields.filter(item => item.filterable)}
             retrieveFieldValues={retrieveFieldValues}
-            onDelete={() => handleRemoveFilter(item)}
+            onDelete={handleRemoveFilter}
             onSave={handleUpdateFilter}
           />
         ))}
       </div>
 
-      <div className='flex items-center my-2 px-4 w-full'>
-        <DataTable
-          data={filteredData}
-        />
+      <div className='flex justify-between items-start my-2 px-4 space-x-3'>
+
+        <div className='w-2/5 h-full'>
+          <FieldPanel />
+        </div>
+        <div className=''>
+          <DataTable
+            data={filteredData}
+          />
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 

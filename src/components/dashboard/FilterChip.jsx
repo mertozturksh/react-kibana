@@ -4,7 +4,7 @@ import { Chip } from '@mui/material';
 import CustomPopper from '../constants/CustomPopper';
 import FilterModal from './modals/FilterModal';
 
-const FilterChip = ({ keyName, fields, retrieveFieldValues, filter, onDelete, onSave }) => {
+const FilterChip = ({ fields, retrieveFieldValues, filter, onDelete, onSave }) => {
 
   const negativeOperator = ['is_not', 'not_one_of', 'not_exists',].includes(filter.operator);
   const label = (
@@ -36,7 +36,7 @@ const FilterChip = ({ keyName, fields, retrieveFieldValues, filter, onDelete, on
         label={label}
         variant="outlined"
         onClick={handleClick}
-        onDelete={onDelete}
+        onDelete={() => onDelete(filter.id)}
         sx={{
           borderRadius: '7px',
           opacity: filter.enabled ? 1 : 0.5,
